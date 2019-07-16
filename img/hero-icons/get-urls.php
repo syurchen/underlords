@@ -1,5 +1,5 @@
 <?php
-
+exec ('wget https://dota2.gamepedia.com/Category:Hero_minimap_icons');
 $file = file('Category:Hero_minimap_icons');
 
 foreach ($file as $line){

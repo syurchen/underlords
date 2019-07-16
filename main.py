@@ -1,9 +1,10 @@
 import cv2
-import pytesseract
 import numpy as np
 import os, fnmatch, ntpath, re
 
 from PIL import Image, ImageDraw
+
+from Classes import Hero
 
 _backgroundColors = ('#25222d', '#312c40')
 _starColors = ('#bbb2a9', '#b4c4e6', '#f3ef00')
@@ -134,7 +135,7 @@ def checkPointWithPrev(pt, prevPts):
 
 if __name__ == "__main__":
     method = cv2.TM_SQDIFF
-    smallImgName = OsFind('Queen*', _heroIconFolder)
+    smallImgName = OsFind('Tink*', _heroIconFolder)
 
     largeImgName = 'score4.png'
     
