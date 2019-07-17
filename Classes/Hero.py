@@ -1,3 +1,5 @@
+from Classes import Utils 
+
 class Hero:
     _name = ''
     _cost = 1
@@ -16,9 +18,12 @@ class Hero:
         if self._iconPath != '':
             return self._iconPath
         else:
-            # @TODO
+            self._iconPath = Utils.OsFind(self._name, self._iconFolder) 
             return self._iconPath
-    
+
+    def getName(self):
+        return self._name
+
     def getIcon(self):
         return self._iconPath
 
@@ -29,7 +34,7 @@ class Hero:
         return self._star
 
     def tokenize(self):
-        count = self._star
+        count = 3 ** (self._star - 1)
         self._star = 1
         return count
 
