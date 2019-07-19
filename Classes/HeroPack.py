@@ -367,7 +367,7 @@ class HeroFactory:
             'name': 'Troll Warlord',
             'cost': 4,
             'alliances': ('Elusive'),
-            'hard': False
+            'hard': True
         },
         {
             'name': 'Enigma',
@@ -409,7 +409,7 @@ class HeroFactory:
 
     def doWithEveryHero(self, func):
         for heroDict in self._heroList:
-            if self.count < 5:
+            if self.count < 1:
                 func(Hero(heroDict['name'], heroDict['cost'], self._heroIconFolder, 1, heroDict['hard']))
                 #self.count += 1
 

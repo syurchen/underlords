@@ -1,5 +1,5 @@
 import os, fnmatch, ntpath, re
-from PIL import Image, ImageDraw
+from PIL import Image
 import numpy as np
 import cv2
 
@@ -49,7 +49,7 @@ class Utils:
 
     def cropBig(self, imgName):
         filename = self._tmpFolder + ntpath.basename(imgName) + '-cropped.png'
-        if os.path.isfile(filename) and 0:
+        if os.path.isfile(filename):
             return filename
 
         img = Image.open(imgName)
@@ -121,25 +121,34 @@ class Utils:
                 if loc[0].size > 0:
                     return re.findall('\d+', filename)[0]
 
-    def getStarsByColor(self, bigImgName, frame, starColorsRgb):
-        img = Image.open(bigImgName)
-        rgb_img = img.convert('RGB')
-        x, y, w, h = frame
+    def change_contrast(img, level):
+        factor = (259 * (level + 255)) / (255 * (259 - level))
+        def contrast(c):
+            return 128 + factor * (c - 128)
+        return img.point(contrast)
 
-        pixel = (int(x + round(w / 2)), int(y + round(h * 1.6)))
-        r, g, b = rgb_img.getpixel(pixel)
+
+    def getStarsByColor(self, bigImgName, frame, starColorsRgb, tryNext = 0):
+        img = Image.open(bigImgName).convert("RGBA")
+        Utils.change_contrast(img, 254)
+        loaded = img.load()
+
+        x, y, w, h = frame
+        pixel = (int(x + round(w / 2)) + tryNext, int(y + round(h * 1.6)))
+        r, g, b, a  = loaded[pixel[0], pixel[1]]
 
         img.close()
-        rgb_img.close()
 
-        print((r, g, b))
-        print(pixel)
+        print('RGB: %s\nPixel: %s' % ((r, g, b, a), pixel))
         for rgb in starColorsRgb:
             delta = abs(rgb[0] - r) / 3 + abs(rgb[1] - g) / 2 + abs(rgb[2] - b)
-            if delta < 70:
+            if delta < 50:
                 return starColorsRgb.index(rgb) + 1
-            print(delta)
+            print('Delta %s: %s' % (starColorsRgb.index(rgb) + 1, delta))
         
+        if tryNext == 0:
+            self.getStarsByColor(bigImgName, frame, starColorsRgb, -5)
+
         # its likely that we hit between 2 stars 
         return 2
 
@@ -147,8 +156,5 @@ class Utils:
         for prev in prevPts:
             if abs(prev[0] - pt[0]) < 10 and  abs(prev[1] - pt[1]) < 10:
                 return False
-        return True
-
-    def checkPointWithDeadZone(pt, bigShape):
         return True
 

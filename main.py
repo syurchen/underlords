@@ -11,6 +11,7 @@ from Classes.HeroPack import *
 _backgroundColors = ('#25222d', '#312c40')
 _starColors = ('#bbb2a9', '#b4c4e6', '#f3ef00')
 _starColorsRgb = ((167, 168, 162), (180, 196, 230), (243, 250, 45))
+#_starColorsRgb = ((37, 36, 41), (180, 196, 230), (52, 44, 59))
 
 _tmpFolder = 'temp/'
 _heroIconFolder = 'img/hero-icons/'
@@ -26,8 +27,8 @@ if __name__ == "__main__":
     largeImgName = 'score4.png'
     resultImgName = 'result.png'
 
-
-    large_image = cv2.imread(oUtils.cropBig(largeImgName))
+    largeImgNameCropped = oUtils.cropBig(largeImgName)
+    large_image = cv2.imread(largeImgNameCropped)
 
     playerCrop, playerRow = oUtils.getPlayerCrop(largeImgName)
     playerLevel = oUtils.getPlayerLevel(playerCrop)
@@ -46,12 +47,12 @@ if __name__ == "__main__":
         loc = np.where(res >= threshold)
         prevPts = []
         for pt in zip(*loc[::-1]):  # Switch collumns and rows
-            if Utils.checkPointWithPrev(pt, prevPts) and Utils.checkPointWithDeadZone(pt, large_image.shape[:-1]):
+            if Utils.checkPointWithPrev(pt, prevPts):
                 prevPts.append(pt)
                 cv2.rectangle(large_image, pt, (pt[0] + h, pt[1] + w), (0, 255, 0), 2)
                 print("row: %s" % (pt,))
                 try:
-                    print(str(oUtils.getStarsByColor(largeImgName, (pt[0], pt[1], w, h), _starColorsRgb)) + ' stars')
+                    print(str(oUtils.getStarsByColor(largeImgNameCropped, (pt[0], pt[1], w, h), _starColorsRgb)) + ' stars\n')
                 except IndexError:
                     pass
 
