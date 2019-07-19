@@ -1,3 +1,4 @@
+from Classes.Utils import Utils
 
 class Hero:
     _name = ''
@@ -7,24 +8,22 @@ class Hero:
     _iconPath = ''
     _iconFolder = ''
 
-    def __init__(self, name, cost, iconFolder, star = 1):
+    def __init__(self, name, cost, iconFolder, star = 1, hard = False):
         self._name = name
         self._cost = cost
         self._star = star
         self._iconFolder = iconFolder
+        self.hard = hard
 
-    def findIcon(self):
+    def getIcon(self):
         if self._iconPath != '':
             return self._iconPath
         else:
-            self._iconPath = Utils.OsFind(self._name, self._iconFolder) 
+            self._iconPath = Utils.OsFind(self._name.replace(' ', '_') + '*', self._iconFolder) 
             return self._iconPath
 
     def getName(self):
         return self._name
-
-    def getIcon(self):
-        return self._iconPath
 
     def getCost(self):
         return self._cost
@@ -43,302 +42,362 @@ class HeroFactory:
         {
             'name': 'Anti-Mage',
             'cost': 1,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Axe',
             'cost': 1,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Batrider',
             'cost': 1,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Bloodseeker',
             'cost': 1,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Bounty Hunter',
             'cost': 1,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Clockwerk',
             'cost': 1,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Drow Ranger',
             'cost': 1,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Enchantress',
             'cost': 1,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Ogre Magi',
             'cost': 1,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Shadow Shaman',
             'cost': 1,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Tinker',
             'cost': 1,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Tiny',
             'cost': 1,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Tusk',
             'cost': 1,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
-            'name': 'Warlock hero',
+            'name': 'Warlock',
             'cost': 1,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Beastmaster',
             'cost': 2,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Chaos Knight',
             'cost': 2,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Crystal Maiden',
             'cost': 2,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Juggernaut',
             'cost': 2,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Luna',
             'cost': 2,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Morphling',
             'cost': 2,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Nature\'s Prophet',
             'cost': 2,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Puck',
             'cost': 2,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Pudge',
             'cost': 2,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Queen of Pain',
             'cost': 2,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Slardar',
             'cost': 2,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Timbersaw',
             'cost': 2,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': True
         },
         {
             'name': 'Treant Protector',
             'cost': 2,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Witch Doctor',
             'cost': 2,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Abaddon',
             'cost': 3,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Arc Warden',
             'cost': 3,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Lina',
             'cost': 3,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Lycan',
             'cost': 3,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Omniknight',
             'cost': 3,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Phantom Assassin',
             'cost': 3,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Razor',
             'cost': 3,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Sand King',
             'cost': 3,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Shadow Fiend',
             'cost': 3,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Slark',
             'cost': 3,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Sniper',
             'cost': 3,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Terrorblade',
             'cost': 3,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': True
         },
         {
             'name': 'Venomancer',
             'cost': 3,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Viper',
             'cost': 3,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': True
         },
         {
             'name': 'Windranger',
             'cost': 3,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Alchemist',
             'cost': 4,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Disruptor',
             'cost': 4,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Doom',
             'cost': 4,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Dragon Knight',
             'cost': 4,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Keeper of the Light',
             'cost': 4,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Kunkka',
             'cost': 4,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Lone Druid',
             'cost': 4,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Medusa',
             'cost': 4,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Mirana',
             'cost': 4,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Necrophos',
             'cost': 4,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': True
         },
         {
             'name': 'Templar Assassin',
             'cost': 4,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Troll Warlord',
             'cost': 4,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Enigma',
             'cost': 5,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Gyrocopter',
             'cost': 5,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Lich',
             'cost': 5,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         },
         {
             'name': 'Techies',
             'cost': 5,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': True
         },
         {
             'name': 'Tidehunter',
             'cost': 5,
-            'alliances': ('Elusive')
+            'alliances': ('Elusive'),
+            'hard': False
         }
     ]
 
@@ -346,10 +405,13 @@ class HeroFactory:
 
     def __init__(self, heroIconFolder):
         self._heroIconFolder = heroIconFolder
+        self.count = 0
 
     def doWithEveryHero(self, func):
         for heroDict in self._heroList:
-            func(Hero(heroDict['name'], heroDict['cost'], self._heroIconFolder))
+            if self.count < 5:
+                func(Hero(heroDict['name'], heroDict['cost'], self._heroIconFolder, 1, heroDict['hard']))
+                #self.count += 1
 
 class HeroStorage:
     

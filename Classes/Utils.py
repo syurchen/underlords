@@ -8,7 +8,7 @@ class Utils:
         self._tmpFolder = tmpFolder
         self._levelIconFolder = levelIconFolder
 
-    def OsFind(self, pattern, path):
+    def OsFind(pattern, path):
         result = []
         for root, dirs, files in os.walk(path):
             for name in files:
@@ -29,8 +29,12 @@ class Utils:
         bgImg.close()
         return filename
 
-# Removing side part
+# Removing side part from Icon
     def cropSome(self, imgName):
+        filename = self._tmpFolder + ntpath.basename(imgName) + '-cropped.png'
+        if os.path.isfile(filename):
+            return filename
+
         img = Image.open(imgName)
         w, h = img.size
         left = w / 4
@@ -38,16 +42,32 @@ class Utils:
         right = 3 * w / 4
         bottom = 3 * h / 4
         cropped = img.crop((left, top, right, bottom))
-        filename = self._tmpFolder + ntpath.basename(imgName) + '-cropped.png'
         cropped.save(filename)
         cropped.close()
         return filename
 
-# Returns our player pic **hopefully**
-    def getPlayerCrop(self, file_name):
-        img = cv2.imread(file_name)
+    def cropBig(self, imgName):
+        filename = self._tmpFolder + ntpath.basename(imgName) + '-cropped.png'
+        if os.path.isfile(filename) and 0:
+            return filename
 
-        img_final = cv2.imread(file_name)
+        img = Image.open(imgName)
+        w, h = img.size
+        left = w / 4
+        top = h / 16
+        right = 14.5 * w / 16
+        bottom =  14.2 * h / 16
+        cropped = img.crop((left, top, right, bottom))
+        cropped.save(filename)
+        cropped.close()
+        return filename
+
+
+# Returns our player pic **hopefully**
+    def getPlayerCrop(self, filename):
+        img = cv2.imread(filename)
+
+        img_final = cv2.imread(filename)
         img2gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         ret, mask = cv2.threshold(img2gray, 180, 255, cv2.THRESH_BINARY)
         image_final = cv2.bitwise_and(img2gray, img2gray, mask=mask)
@@ -71,17 +91,17 @@ class Utils:
                 largest = (x, y, w, h)
         
         x, y, w, h = largest
+        '''
         cv2.rectangle(img, (0, y), (round(fullW / 8), y + h), (255, 0, 255), 2)
         cv2.imwrite('result.png', img)
+        '''
 
         cropped = img_final[y :y +  h , 0 : round(fullW / 8)]
 
-        s = self._tmpFolder + ntpath.basename(file_name) + '-cropped.png'
+        s = self._tmpFolder + ntpath.basename(filename) + '-player-cropped.png'
         cv2.imwrite(s , cropped)
 
-        # write original image with added contours to disk
-
-        return s
+        return s, largest
 
 # Takes player pic, returns lvl as int
     def getPlayerLevel(self, imgName):
@@ -103,6 +123,7 @@ class Utils:
         img = Image.open(bigImgName)
         rgb_img = img.convert('RGB')
         x, y, w, h = frame
+
         pixel = (int(x + round(w / 2)), int(y + round(h * 1.6)))
         r, g, b = rgb_img.getpixel(pixel)
 
@@ -120,10 +141,12 @@ class Utils:
         # its likely that we hit between 2 stars 
         return 2
 
-    def checkPointWithPrev(self, pt, prevPts):
+    def checkPointWithPrev(pt, prevPts):
         for prev in prevPts:
             if abs(prev[0] - pt[0]) < 10 and  abs(prev[1] - pt[1]) < 10:
-                return 0
-        return 1
+                return False
+        return True
 
+    def checkPointWithDeadZone(pt, bigShape):
+        return True
 
