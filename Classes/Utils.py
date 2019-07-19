@@ -44,6 +44,7 @@ class Utils:
         cropped = img.crop((left, top, right, bottom))
         cropped.save(filename)
         cropped.close()
+        os.system('./pngcrush -ow -rem allb -reduce %s' % filename)
         return filename
 
     def cropBig(self, imgName):
@@ -60,6 +61,7 @@ class Utils:
         cropped = img.crop((left, top, right, bottom))
         cropped.save(filename)
         cropped.close()
+        os.system('./pngcrush -ow -rem allb -reduce %s' % filename)
         return filename
 
 

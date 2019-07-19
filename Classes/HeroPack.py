@@ -391,7 +391,7 @@ class HeroFactory:
             'name': 'Techies',
             'cost': 5,
             'alliances': ('Elusive'),
-            'hard': True
+            'hard': False
         },
         {
             'name': 'Tidehunter',
