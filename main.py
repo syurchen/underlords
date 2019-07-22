@@ -6,6 +6,7 @@ from PIL import Image, ImageDraw
 from functools import partial
 
 from Classes.Utils import Utils
+from Classes.Accountant import Accountant
 from Classes.HeroPack import *
 
 _backgroundColors = ('#25222d', '#312c40')
