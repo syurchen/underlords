@@ -416,12 +416,15 @@ class HeroFactory:
 class HeroStorage:
     
     _storage = {}
-   
+
     # All heroes are stored in tokens (1*)
-    def store(hero):
+    def store(hero, count = 0):
         heroName = hero.getName()
         heroDict = {}
         heroDict.hero, heroDict.count = hero.tokenize()
+        if count != 0:
+            _storage[heroName].count = count
+
         if heroName in _storage:
             _storage[heroName].count += heroDict.count
         else:
@@ -432,4 +435,6 @@ class HeroStorage:
             return _storage[heroName].count
         except:
             return 0
+
+
 

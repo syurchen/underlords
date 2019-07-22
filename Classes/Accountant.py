@@ -39,10 +39,16 @@ class Accountant:
     #Exp towards next level
     _playerExp = 0
 
+
     def __init__(self, playerLevel, playerS, opponentS):
         self._playerS = playerS
         self._opponentS = opponentS
         self._playerLevel = playerLevel
+        self._sharedPool = HeroStorage()
+
+    #removes player and opponent. created shared pool
+    def excludeStorages(self):
+        pass
 
     def getLevelUpCost(self):
         return getLevelUpCost(self._playerLevel + 1, self._playerExp)
