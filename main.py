@@ -4,6 +4,7 @@ import numpy as np
 from PIL import Image, ImageDraw
 
 from functools import partial
+import pickle
 
 from Classes.Utils import Utils
 from Classes.Accountant import Accountant
@@ -22,8 +23,8 @@ if __name__ == "__main__":
     oUtils = Utils(_tmpFolder, _levelIconFolder)
     oHeroFactory = HeroFactory(_heroIconFolder)
 
-    playerStorage = HeroStorage()
-    oppStorage = HeroStorage()
+    playerS = HeroStorage()
+    opponentS = HeroStorage()
 
     largeImgName = 'score4.png'
     resultImgName = 'result.png'
@@ -50,19 +51,71 @@ if __name__ == "__main__":
         for pt in zip(*loc[::-1]):  # Switch collumns and rows
             if Utils.checkPointWithPrev(pt, prevPts):
                 prevPts.append(pt)
-                cv2.rectangle(large_image, pt, (pt[0] + h, pt[1] + w), (0, 255, 0), 2)
+                #cv2.rectangle(large_image, pt, (pt[0] + h, pt[1] + w), (0, 255, 0), 2)
                 print("row: %s" % (pt,))
                 try:
-                    print(str(oUtils.getStarsByColor(largeImgNameCropped, (pt[0], pt[1], w, h), _starColorsRgb)) + ' stars\n')
+                    star = oUtils.getStarsByColor(largeImgNameCropped, (pt[0], pt[1], w, h), _starColorsRgb)
+                    print(str(star) + ' stars\n')
+                    foundList.append({'name': oHero.getName(), 'point': pt, 'star': star})
                 except IndexError:
                     pass
 
-        cv2.imwrite(resultImgName, large_image)
+
+    foundList = []
+    try:
+        cache = open('cache', 'r+b') 
+        cacheData = cache.read()
+    except IndexError:
+        print('no cache!')
+        cacheData = []
+    if len(cacheData):
+        foundList = pickle.loads(cacheData)
+    else:
+        oHeroFactory.doWithEveryHero(partial(findHeroOnImg, large_image))
+        pickler = pickle.Pickler(cache)
+        pickler.dump(foundList)
 
 
-    oHeroFactory.doWithEveryHero(partial(findHeroOnImg, large_image))
+    #filtering out bad finds
+    largeH, largeW = large_image.shape[:-1]
+    heroLineX = largeW / 16
+    heroLineBenchX = largeW * .8
+    heroLineBenchEndX = heroLineBenchX + 96 
+    print(heroLineX)
+    
+    #finding start of hero lines
+    heroLines = []
+    for i, val in enumerate(foundList):
+        pt = val['point']
+        if pt[0] < heroLineX or pt[0] > heroLineBenchX and pt[0] < heroLineBenchEndX:
+            if pt[1] > playerRow[1] - largeH / 9  and pt[1] < playerRow[1] - largeH / 9 + playerRow[3]:
+                val['player'] = True
+            heroLines.append(val)
+            del foundList[i]
+    
+    #taking out trash from line start
+    heroLines.sort(key=lambda k: k['point'][1])
+    prev = 0
+    for heroLine in heroLines:
+        pt = heroLine['point']
+        if prev != 0:
+            if abs(pt[1] - prev[1]) < largeH / 10 and abs(pt[0] - prev[0]) < largeW / 2:
+                print('conflict %s vs %s' % (pt, prev))
+        prev = pt 
 
-
+    #Finding finds belonging to those lines
+    for val in foundList:
+        pt = val['point']
+        for lineStart in heroLines:
+            startPt = lineStart['point']
+            if pt[0] > startPt[0] and abs(startPt[1] - pt[1]) < 5:
+                heroLines.append(val)
+                break
+    
+    for val in heroLines:
+        pt = val['point']
+        cv2.rectangle(large_image, pt, (pt[0] + 20, pt[1] + 20), (0, 255, 0), 2)
+    cv2.imwrite(resultImgName, large_image)
 
 
 

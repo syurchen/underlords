@@ -40,15 +40,19 @@ class Accountant:
     _playerExp = 0
 
 
-    def __init__(self, playerLevel, playerS, opponentS):
+    def __init__(self, oHeroFactory, playerLevel, playerS, opponentS):
         self._playerS = playerS
         self._opponentS = opponentS
         self._playerLevel = playerLevel
-        self._sharedPool = HeroStorage()
 
-    #removes player and opponent. created shared pool
-    def excludeStorages(self):
-        pass
+        self._sharedPool = HeroStorage()
+        oHeroFactory.doWithEveryHero(populateSharedPool)
+       
+    #This method will only be used in constructor
+    def populateSharedPool(hero):
+        heroName = hero.getName()
+        self._sharedPool[heroName] -= playerS.getHeroCount(heroName)
+        self._sharedPool[heroName] -= opponentS.getHeroCount(heroName)
 
     def getLevelUpCost(self):
         return getLevelUpCost(self._playerLevel + 1, self._playerExp)
