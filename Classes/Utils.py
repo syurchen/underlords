@@ -59,6 +59,7 @@ class Utils:
         right = 14.5 * w / 16
         bottom =  14.2 * h / 16
         cropped = img.crop((left, top, right, bottom))
+        Utils.changeContrast(cropped, 254)
         cropped.save(filename)
         cropped.close()
         os.system('./pngcrush -ow -rem allb -reduce %s' % filename)
@@ -116,12 +117,12 @@ class Utils:
                 w, h = small_image.shape[:-1]
 
                 res = cv2.matchTemplate(large_image, small_image, cv2.TM_CCOEFF_NORMED)
-                threshold = .6
+                threshold = .8
                 loc = np.where(res >= threshold)
                 if loc[0].size > 0:
                     return re.findall('\d+', filename)[0]
 
-    def change_contrast(img, level):
+    def changeContrast(img, level):
         factor = (259 * (level + 255)) / (255 * (259 - level))
         def contrast(c):
             return 128 + factor * (c - 128)
@@ -130,7 +131,7 @@ class Utils:
 
     def getStarsByColor(self, bigImgName, frame, starColorsRgb, tryNext = 0):
         img = Image.open(bigImgName).convert("RGBA")
-        Utils.change_contrast(img, 254)
+        Utils.changeContrast(img, 254)
         loaded = img.load()
 
         x, y, w, h = frame

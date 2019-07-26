@@ -34,7 +34,7 @@ class Hero:
     def tokenize(self):
         count = 3 ** (self._star - 1)
         self._star = 1
-        return count
+        return self, count
 
 class HeroFactory:
     #Should probably be in config
@@ -71,7 +71,7 @@ class HeroFactory:
         },
         {
             'name': 'Clockwerk',
-            'cost': 1,
+            'cost': 3,
             'alliances': ('Elusive'),
             'hard': False
         },
@@ -101,7 +101,7 @@ class HeroFactory:
         },
         {
             'name': 'Tinker',
-            'cost': 1,
+            'cost': 3,
             'alliances': ('Elusive'),
             'hard': False
         },
@@ -197,7 +197,7 @@ class HeroFactory:
         },
         {
             'name': 'Treant Protector',
-            'cost': 2,
+            'cost': 3,
             'alliances': ('Elusive'),
             'hard': False
         },
@@ -215,7 +215,7 @@ class HeroFactory:
         },
         {
             'name': 'Arc Warden',
-            'cost': 3,
+            'cost': 4,
             'alliances': ('Elusive'),
             'hard': False
         },
@@ -245,13 +245,13 @@ class HeroFactory:
         },
         {
             'name': 'Razor',
-            'cost': 3,
+            'cost': 1,
             'alliances': ('Elusive'),
             'hard': False
         },
         {
             'name': 'Sand King',
-            'cost': 3,
+            'cost': 4,
             'alliances': ('Elusive'),
             'hard': False
         },
@@ -293,7 +293,7 @@ class HeroFactory:
         },
         {
             'name': 'Windranger',
-            'cost': 3,
+            'cost': 2,
             'alliances': ('Elusive'),
             'hard': False
         },
@@ -341,7 +341,7 @@ class HeroFactory:
         },
         {
             'name': 'Medusa',
-            'cost': 4,
+            'cost': 5,
             'alliances': ('Elusive'),
             'hard': False
         },
@@ -365,7 +365,7 @@ class HeroFactory:
         },
         {
             'name': 'Troll Warlord',
-            'cost': 4,
+            'cost': 5,
             'alliances': ('Elusive'),
             'hard': True
         },
@@ -395,7 +395,7 @@ class HeroFactory:
         },
         {
             'name': 'Tidehunter',
-            'cost': 5,
+            'cost': 4,
             'alliances': ('Elusive'),
             'hard': False
         }
@@ -407,6 +407,10 @@ class HeroFactory:
         self._heroIconFolder = heroIconFolder
         self.count = 0
 
+    def getHeroByName(self, name, star):
+        heroDict = next((x for x in self._heroList if x['name'] == name), None)
+        return Hero(heroDict['name'], heroDict['cost'], self._heroIconFolder, star, heroDict['hard'])
+
     def doWithEveryHero(self, func):
         for heroDict in self._heroList:
             if self.count < 1:
@@ -415,24 +419,25 @@ class HeroFactory:
 
 class HeroStorage:
     
-    _storage = {}
+    def __init__(self):
+        self._storage = {}
 
     # All heroes are stored in tokens (1*)
-    def store(hero, count = 0):
+    def store(self, hero, count = 0):
         heroName = hero.getName()
         heroDict = {}
-        heroDict.hero, heroDict.count = hero.tokenize()
+        heroDict['hero'], heroDict['count'] = hero.tokenize()
         if count != 0:
-            _storage[heroName].count = count
+            self._storage[heroName]['count'] = count
 
-        if heroName in _storage:
-            _storage[heroName].count += heroDict.count
+        if heroName in self._storage:
+            self._storage[heroName]['count'] += heroDict['count']
         else:
-            _storage[heroName] = heroDict
+            self._storage[heroName] = heroDict
 
     def getHeroCount(self, heroName):
         try:
-            return _storage[heroName].count
+            return self._storage[heroName]['count']
         except:
             return 0
 
