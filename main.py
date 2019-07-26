@@ -127,7 +127,7 @@ if __name__ == "__main__":
             opponentS.store(hero)
     cv2.imwrite(resultImgName, large_image)
 
-
+    oAccountant = Accountant(oHeroFactory, playerLevel, playerS, opponentS)
 
 
 

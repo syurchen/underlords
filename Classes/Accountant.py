@@ -1,3 +1,5 @@
+from Classes.HeroPack import HeroStorage
+
 class Accountant:
 
     _levelExp = {
@@ -44,15 +46,20 @@ class Accountant:
         self._playerS = playerS
         self._opponentS = opponentS
         self._playerLevel = playerLevel
+        self._heroFactory = oHeroFactory
 
         self._sharedPool = HeroStorage()
-        oHeroFactory.doWithEveryHero(populateSharedPool)
+        oHeroFactory.doWithEveryHero(self.populateSharedPool)
        
     #This method will only be used in constructor
-    def populateSharedPool(hero):
+    def populateSharedPool(self, hero):
         heroName = hero.getName()
-        self._sharedPool[heroName] -= playerS.getHeroCount(heroName)
-        self._sharedPool[heroName] -= opponentS.getHeroCount(heroName)
+        count = self._poolSize[hero.getCost()]
+
+        count -= self._playerS.getHeroCount(heroName)
+        count -= self._opponentS.getHeroCount(heroName)
+
+        self._sharedPool.store(hero, count)
 
     def getLevelUpCost(self):
         return getLevelUpCost(self._playerLevel + 1, self._playerExp)
@@ -62,6 +69,31 @@ class Accountant:
         return round(expDelta / 4) * 5
         
 
-    def getUpgradeChance(self, hero):
-        return
+    def getOdds(playerLevel):
+        odds = self._levelChances[playerLevel]
+        #now we should extract blacklist (heroes that are shown to you right now)
+        return odds
 
+    def getPoolCountByCost(self, heroCost):
+        poolCount = 0
+        heroList = self._heroFactory.getHeroListByCost(heroCost)
+        for heroName in heroList:
+            poolCount += self._sharedPool.getHeroCount(heroName)
+
+        return poolCount
+
+    # returns Dict with upgrade chances per roll number (default 5, 10, 15)
+    def getUpgradeChanceFixedRolls(self, heroName):
+        hero = self._heroFactory.getHeroByName(heroName)
+
+        heroCost = hero.getCost()
+        playerCount = self._playerS.getHeroCount(heroName)
+        poolCount = self.getPoolCountByCost(heroCost) 
+        costOdds = Accountant.getOdds(self._playerLevel)[heroCost - 1]
+        
+        chances = {5: 0, 10: 0, 15: 0}
+
+        for i, val in chances:
+            pass
+
+        return chances
