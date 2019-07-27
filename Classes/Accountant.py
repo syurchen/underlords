@@ -1,4 +1,5 @@
 from Classes.HeroPack import HeroStorage
+import scipy.special
 
 class Accountant:
 
@@ -45,7 +46,7 @@ class Accountant:
     def __init__(self, oHeroFactory, playerLevel, playerS, opponentS):
         self._playerS = playerS
         self._opponentS = opponentS
-        self._playerLevel = playerLevel
+        self._playerLevel = int(playerLevel)
         self._heroFactory = oHeroFactory
 
         self._sharedPool = HeroStorage()
@@ -70,11 +71,12 @@ class Accountant:
         
 
     def getOdds(playerLevel):
-        odds = self._levelChances[playerLevel]
+        odds = Accountant._levelChances[playerLevel]
         #now we should extract blacklist (heroes that are shown to you right now)
         return odds
 
     def getPoolCountByCost(self, heroCost):
+        #TODO remove 3 stars that player has
         poolCount = 0
         heroList = self._heroFactory.getHeroListByCost(heroCost)
         for heroName in heroList:
@@ -90,10 +92,16 @@ class Accountant:
         playerCount = self._playerS.getHeroCount(heroName)
         poolCount = self.getPoolCountByCost(heroCost) 
         costOdds = Accountant.getOdds(self._playerLevel)[heroCost - 1]
+        if playerCount < 3:
+            upgradeCount = 3 - playerCount
+        else:
+            upgradeCount = 9 - playerCount
         
         chances = {5: 0, 10: 0, 15: 0}
+        print(upgradeCount, poolCount)
 
-        for i, val in chances:
-            pass
-
+        for i in chances.keys():
+            rollCount = i * 5 #because we are displayer 5 heroes per roll
+            chance = 10000 * costOdds * scipy.special.binom(poolCount - upgradeCount, rollCount - upgradeCount) / scipy.special.binom(poolCount, rollCount)
+            chances[i] = chance
         return chances

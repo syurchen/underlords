@@ -407,14 +407,14 @@ class HeroFactory:
         self._heroIconFolder = heroIconFolder
         self.count = 0
 
-    def getHeroNamesByCost(self, cost):
+    def getHeroListByCost(self, cost):
         heroList = []
         for hero in self._heroList:
             if hero['cost'] == cost:
                 heroList.append(hero['name'])
         return heroList
 
-    def getHeroByName(self, name, star):
+    def getHeroByName(self, name, star = 1):
         heroDict = next((x for x in self._heroList if x['name'] == name), None)
         return Hero(heroDict['name'], heroDict['cost'], self._heroIconFolder, star, heroDict['hard'])
 
@@ -434,7 +434,7 @@ class HeroStorage:
         heroName = hero.getName()
         heroDict = {}
         heroDict['hero'], heroDict['count'] = hero.tokenize()
-        self._storage[heroName] = {'count': 0}
+        self._storage[heroName] = {'name': heroName, 'count': 0}
         if count != 0:
             self._storage[heroName]['count'] = count
 
@@ -449,5 +449,7 @@ class HeroStorage:
         except:
             return 0
 
-
+    def doWithEveryStoredHero(self, func):
+        for hero in self._storage:
+            func(hero)
 

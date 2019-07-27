@@ -28,7 +28,7 @@ if __name__ == "__main__":
     playerS = HeroStorage()
     opponentS = HeroStorage()
 
-    largeImgName = 'score5.png'
+    largeImgName = 'score4.png'
     resultImgName = 'result.png'
 
     largeImgNameCropped = oUtils.cropBig(largeImgName)
@@ -129,6 +129,10 @@ if __name__ == "__main__":
 
     oAccountant = Accountant(oHeroFactory, playerLevel, playerS, opponentS)
 
+    def getChances(heroName):
+        chances = oAccountant.getUpgradeChanceFixedRolls(heroName)
+        print(heroName, chances)
 
+    playerS.doWithEveryStoredHero(getChances)
 
 
