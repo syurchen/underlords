@@ -89,9 +89,9 @@ if __name__ == "__main__":
     heroLines = []
     for i, val in enumerate(foundList):
         pt = val['point']
+        if pt[1] > playerRow[1] - largeH / 9  and pt[1] < playerRow[1] - largeH / 9 + playerRow[3]:
+            val['player'] = True
         if pt[0] < heroLineX or (pt[0] > heroLineBenchX and pt[0] < heroLineBenchEndX):
-            if pt[1] > playerRow[1] - largeH / 9  and pt[1] < playerRow[1] - largeH / 9 + playerRow[3]:
-                val['player'] = True
             heroLines.append(val)
             del foundList[i]
     
@@ -129,10 +129,11 @@ if __name__ == "__main__":
 
     oAccountant = Accountant(oHeroFactory, playerLevel, playerS, opponentS)
 
-    def getChances(heroName):
-        chances = oAccountant.getUpgradeChanceFixedRolls(heroName)
-        print(heroName, chances)
-
+    def getChances(hero):
+        if hero['count'] < 9:
+            heroName = hero['name']
+            chances = oAccountant.getUpgradeChanceFixedRolls(heroName)
+            print(heroName, chances)
     playerS.doWithEveryStoredHero(getChances)
 
 

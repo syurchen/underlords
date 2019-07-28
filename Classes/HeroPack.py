@@ -450,6 +450,6 @@ class HeroStorage:
             return 0
 
     def doWithEveryStoredHero(self, func):
-        for hero in self._storage:
+        for hero in self._storage.values():
             func(hero)
 

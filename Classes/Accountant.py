@@ -1,5 +1,6 @@
 from Classes.HeroPack import HeroStorage
 import scipy.special
+from math import factorial
 
 class Accountant:
 
@@ -90,7 +91,8 @@ class Accountant:
 
         heroCost = hero.getCost()
         playerCount = self._playerS.getHeroCount(heroName)
-        poolCount = self.getPoolCountByCost(heroCost) 
+        poolCount = self.getPoolCountByCost(heroCost) #Number of heroes on same cost in pool
+        heroPoolCount = self._sharedPool.getHeroCount(heroName) #Number of desired heroes in pool
         costOdds = Accountant.getOdds(self._playerLevel)[heroCost - 1]
         if playerCount < 3:
             upgradeCount = 3 - playerCount
@@ -98,10 +100,17 @@ class Accountant:
             upgradeCount = 9 - playerCount
         
         chances = {5: 0, 10: 0, 15: 0}
-        print(upgradeCount, poolCount)
+
+        mainChance = 1
+        for i in range (0, upgradeCount - 1):
+            mainChance = mainChance * (heroPoolCount - i) / (poolCount - i) 
+        mainChance = mainChance * costOdds
 
         for i in chances.keys():
             rollCount = i * 5 #because we are displayer 5 heroes per roll
-            chance = 10000 * costOdds * scipy.special.binom(poolCount - upgradeCount, rollCount - upgradeCount) / scipy.special.binom(poolCount, rollCount)
-            chances[i] = chance
+            chance = round(mainChance * (rollCount - upgradeCount) * 10**6, 3)
+            if chance > 100:
+                chances[i] = 99.999
+            else:
+                chances[i] = chance
         return chances
