@@ -28,7 +28,7 @@ if __name__ == "__main__":
     playerS = HeroStorage()
     opponentS = HeroStorage()
 
-    largeImgName = 'score4.png'
+    largeImgName = 'score5.png'
     resultImgName = 'result.png'
 
     largeImgNameCropped = oUtils.cropBig(largeImgName)
@@ -83,7 +83,7 @@ if __name__ == "__main__":
     heroLineX = largeW / 16
     heroLineBenchX = largeW * .75
     heroLineBenchEndX = heroLineBenchX + 32 
-    print(heroLineBenchX, heroLineBenchEndX)
+    #print(heroLineBenchX, heroLineBenchEndX)
     
     #finding start of hero lines
     heroLines = []
@@ -130,10 +130,17 @@ if __name__ == "__main__":
     oAccountant = Accountant(oHeroFactory, playerLevel, playerS, opponentS)
 
     def getChances(hero):
-        if hero['count'] < 9:
+        playerCount = hero['count']
+        if playerCount < 9:
             heroName = hero['name']
             chances = oAccountant.getUpgradeChanceFixedRolls(heroName)
-            print(heroName, chances)
+            if playerCount < 3:
+                upgradeCount = 3 - playerCount
+                star = 2
+            else:
+                upgradeCount = 9 - playerCount
+                star = 3
+            print('%s %s*(need %s more): %s' % (heroName, star, upgradeCount, chances))
     playerS.doWithEveryStoredHero(getChances)
 
 

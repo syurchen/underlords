@@ -1,6 +1,5 @@
 from Classes.HeroPack import HeroStorage
-import scipy.special
-from math import factorial
+from functools import partial
 
 class Accountant:
 
@@ -42,13 +41,15 @@ class Accountant:
     _playerGold = 0
     #Exp towards next level
     _playerExp = 0
+    _opponents = {}
 
 
-    def __init__(self, oHeroFactory, playerLevel, playerS, opponentS):
+    def __init__(self, oHeroFactory, playerLevel, playerS, opponentS, opponents = {}):
         self._playerS = playerS
         self._opponentS = opponentS
         self._playerLevel = int(playerLevel)
         self._heroFactory = oHeroFactory
+        self._opponents = opponents
 
         self._sharedPool = HeroStorage()
         oHeroFactory.doWithEveryHero(self.populateSharedPool)
@@ -73,17 +74,25 @@ class Accountant:
 
     def getOdds(playerLevel):
         odds = Accountant._levelChances[playerLevel]
-        #now we should extract blacklist (heroes that are shown to you right now)
         return odds
 
     def getPoolCountByCost(self, heroCost):
-        #TODO remove 3 stars that player has
         poolCount = 0
         heroList = self._heroFactory.getHeroListByCost(heroCost)
+        #removing 3 stars that player has, because this unit wont be shown
+        completedList = []
+        self._playerS.doWithEveryStoredHero(partial(Accountant.getCompleted, completedList))
+        #TODO we should extract blacklist (heroes that are shown to you right now) need opponent count and levels for this
+
         for heroName in heroList:
-            poolCount += self._sharedPool.getHeroCount(heroName)
+            if heroName not in completedList:
+                poolCount += self._sharedPool.getHeroCount(heroName)
 
         return poolCount
+
+    def getCompleted(completedList, heroDict):
+        if heroDict['count'] == 9:
+            completedList.append(heroDict['name'])
 
     # returns Dict with upgrade chances per roll number (default 5, 10, 15)
     def getUpgradeChanceFixedRolls(self, heroName):
