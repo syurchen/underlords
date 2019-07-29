@@ -1,7 +1,7 @@
 from app import app
+from flask import render_template
+
 @app.route('/underlords')
 def index():
-    return "Soon."
-@app.route('/underlords/test')
-def indexTest():
-    return "test"
+    user = {'username': 'Miguel'}
+    return render_template('index.html', title='Home', user=user)
