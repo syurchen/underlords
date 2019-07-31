@@ -10,26 +10,32 @@ from Classes.Utils import Utils
 from Classes.Accountant import Accountant
 from Classes.HeroPack import *
 
+from app import app
 
-if __name__ == "__main__":
+def detectAndCalculate(largeImgName, resultImgName):
+    _tmpFolder = app.config['TMP_FOLDER']
+    _levelIconFolder = app.config['LEVEL_ICON_FOLDER']
+    _heroIconFolder = app.config['HERO_ICON_FOLDER']
+    _enableCache = app.config['ENABLE_CACHE']
+    _cacheFile = app.config['CACHE_FILE']
+
+    _starColorsRgb = app.config['STAR_COLORS_RGB']
+    
     oUtils = Utils(_tmpFolder, _levelIconFolder)
     oHeroFactory = HeroFactory(_heroIconFolder)
 
     playerS = HeroStorage()
     opponentS = HeroStorage()
 
-    largeImgName = 'score5.png'
-    resultImgName = 'result.png'
-
     largeImgNameCropped = oUtils.cropBig(largeImgName)
     large_image = cv2.imread(largeImgNameCropped)
 
     playerCrop, playerRow = oUtils.getPlayerCrop(largeImgName)
     playerLevel = oUtils.getPlayerLevel(playerCrop)
-    print('Player row: %s \nPlayer level %s\n' % (playerRow, playerLevel)) 
+    #print('Player row: %s \nPlayer level %s\n' % (playerRow, playerLevel)) 
 
     def findHeroOnImg(large_image, oHero):
-        print('\nProcessing %s' % oHero.getName())
+        #print('\nProcessing %s' % oHero.getName())
 
         smallImgName = oHero.getIcon() 
         small_image = cv2.imread(oUtils.cropSome(smallImgName))
@@ -44,29 +50,34 @@ if __name__ == "__main__":
             if Utils.checkPointWithPrev(pt, prevPts):
                 prevPts.append(pt)
                 #cv2.rectangle(large_image, pt, (pt[0] + h, pt[1] + w), (0, 255, 0), 2)
-                print("row: %s" % (pt,))
+                #print("row: %s" % (pt,))
                 try:
                     star = oUtils.getStarsByColor(largeImgNameCropped, (pt[0], pt[1], w, h), _starColorsRgb)
-                    print(str(star) + ' stars\n')
+                    #print(str(star) + ' stars\n')
                     foundList.append({'name': oHero.getName(), 'point': pt, 'star': star})
                 except IndexError:
                     pass
 
 
     foundList = []
+    cacheData = []
     try:
-        cache = open('cache', 'r+b') 
+        cache = open(_cacheFile, 'r+b') 
         cacheData = cache.read()
     except IndexError:
-        print('no cache!')
+        #print('no cache!')
         cacheData = []
-    if len(cacheData) and _enableCache:
+    except FileNotFoundError:
+        cache = open(_cacheFile,'w')
+
+    if len(cacheData):
         foundList = pickle.loads(cacheData)
     else:
         oHeroFactory.doWithEveryHero(partial(findHeroOnImg, large_image))
-        pickler = pickle.Pickler(cache)
-        pickler.dump(foundList)
-
+        if _enableCache:
+            pickler = pickle.Pickler(cache)
+            pickler.dump(foundList)
+    cache.close()
 
     #filtering out bad finds
     largeH, largeW = large_image.shape[:-1]
@@ -119,18 +130,23 @@ if __name__ == "__main__":
 
     oAccountant = Accountant(oHeroFactory, playerLevel, playerS, opponentS)
 
+    chancesList = []
     def getChances(hero):
         playerCount = hero['count']
         if playerCount < 9:
             heroName = hero['name']
-            chances = oAccountant.getUpgradeChanceFixedRolls(heroName)
             if playerCount < 3:
                 upgradeCount = 3 - playerCount
                 star = 2
             else:
                 upgradeCount = 9 - playerCount
                 star = 3
-            print('%s %s*(need %s more): %s' % (heroName, star, upgradeCount, chances))
+            chancesList.append({
+                'chances': oAccountant.getUpgradeChanceFixedRolls(heroName),
+                'hero': heroName,
+                'count': upgradeCount
+            })
+            #print('%s %s*(need %s more): %s' % (heroName, star, upgradeCount, chances))
     playerS.doWithEveryStoredHero(getChances)
-
-
+    
+    return chancesList, resultImgName

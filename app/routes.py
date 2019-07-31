@@ -1,5 +1,10 @@
+import os
+from flask import Flask, render_template, flash, request, redirect, url_for, send_from_directory
+from werkzeug.utils import secure_filename 
+
 from app import app
-from flask import Flask, render_template, flash, request, redirect, url_for
+from Classes.main import detectAndCalculate
+from Classes.Utils import Utils
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -19,8 +24,12 @@ def index():
             flash('No selected file')
             return redirect(request.url)
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('uploaded_file',
-                                    filename=filename))
+            oldFilename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], oldFilename))
+            processedFilename = Utils.createNewRandomFilename(oldFilename)
+            rollData = detectAndCalculate(oldFilename, processedFilename)
+            return render_template('processed.html', old_file = oldFilename, new_file = processedFilename, roll_data = rollData)
     return render_template('upload.html')
+@app.route('/underlords/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(os.path.abspath(app.config['UPLOAD_FOLDER']), filename)

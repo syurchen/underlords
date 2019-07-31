@@ -2,6 +2,8 @@ import os, fnmatch, ntpath, re
 from PIL import Image
 import numpy as np
 import cv2
+import hashlib
+import time
 
 class Utils:
     def __init__(self, tmpFolder, levelIconFolder):
@@ -16,7 +18,6 @@ class Utils:
                     return os.path.join(root, name)
         return result
 
-
     def addBackground(self, imgName, colorHex):
         img = Image.open(imgName)
         webhexcolor = colorHex
@@ -24,7 +25,7 @@ class Utils:
         bgImg = Image.new("RGB", (w - 1, h - 1), webhexcolor)
 
         bgImg.paste(img, (0, 0, h, w), img)
-        filename = _tmpFolder + ntpath.basename(imgName) + colorHex + '.png'
+        filename = self._tmpFolder + ntpath.basename(imgName) + colorHex + '.png'
         bgImg.save(filename)
         bgImg.close()
         return filename
@@ -140,12 +141,12 @@ class Utils:
 
         img.close()
 
-        print('RGB: %s\nPixel: %s' % ((r, g, b, a), pixel))
+        #print('RGB: %s\nPixel: %s' % ((r, g, b, a), pixel))
         for rgb in starColorsRgb:
             delta = abs(rgb[0] - r) / 3 + abs(rgb[1] - g) / 2 + abs(rgb[2] - b)
             if delta < 50:
                 return starColorsRgb.index(rgb) + 1
-            print('Delta %s: %s' % (starColorsRgb.index(rgb) + 1, delta))
+            #print('Delta %s: %s' % (starColorsRgb.index(rgb) + 1, delta))
         
         if tryNext == 0:
             self.getStarsByColor(bigImgName, frame, starColorsRgb, -5)
@@ -158,4 +159,12 @@ class Utils:
             if abs(prev[0] - pt[0]) < 10 and  abs(prev[1] - pt[1]) < 10:
                 return False
         return True
+
+    def createNewRandomFilename(oldName, wc = 5):
+        ext = os.path.splitext(oldName)[1][1:]
+        m = hashlib.md5()
+        m.update(oldName.encode('utf-8'))
+        m.update(str(time.time()).encode('utf-8'))
+        
+        return str(m.hexdigest()) + '.' + ext
 

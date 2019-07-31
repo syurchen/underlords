@@ -1,4 +1,5 @@
 __pycache__
 temp/*
+static/*
 img/hero-icons/*.png*
 .DS_Store
