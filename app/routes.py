@@ -27,7 +27,7 @@ def index():
             oldFilename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], oldFilename))
             processedFilename = Utils.createNewRandomFilename(oldFilename)
-            rollData = detectAndCalculate(oldFilename, processedFilename)
+            rollData = detectAndCalculate(app.config['UPLOAD_FOLDER'] + oldFilename, processedFilename)
             return render_template('processed.html', old_file = 'underlords/uploads/' + oldFilename, new_file = 'underlords/uploads/' + processedFilename, roll_data = rollData)
     return render_template('upload.html')
 @app.route('/underlords/uploads/<filename>')
