@@ -27,6 +27,7 @@ def index():
             oldFilename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], oldFilename))
             processedFilename = app.config['UPLOAD_FOLDER'] + Utils.createNewRandomFilename(oldFilename)
+            oldFilename = app.config['UPLOAD_FOLDER'] + oldFilename 
             rollData = detectAndCalculate(oldFilename, processedFilename)
             return render_template('processed.html', old_file = oldFilename, new_file = processedFilename, roll_data = rollData)
     return render_template('upload.html')
