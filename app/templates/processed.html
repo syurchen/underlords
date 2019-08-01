@@ -1,0 +1,28 @@
+<html>
+	<head>
+		<title>Underlords Helper - Results</title>
+	</head>
+	<h1>Result of processing your scoreboard</h1>
+	<table>
+		<thead>
+			<td>Hero</td>
+			<td>Needed for upgrade</td>
+			<td>Chance in 5 rolls</td>
+			<td>Chance in 10 rolls</td>
+			<td>Chance in 15 rolls</td>
+		</thead>
+		{% for dict in roll_data %}
+			{% for value in dict %}
+			{% if value['chances'] %}
+				<tr>
+					<td>{{ value['hero'] }}</td>
+					<td>{{ value['count'] }}</td>
+					<td>{{ value['chances'][5] }}%</td>
+					<td>{{ value['chances'][10] }}%</td>
+					<td>{{ value['chances'][15] }}%</td>
+				</tr>
+			{% endif %}
+			{% endfor %}
+		{% endfor %}
+	</table>
+</html>
