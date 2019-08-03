@@ -16,7 +16,6 @@ def detectAndCalculate(largeImgName, resultImgName):
     _tmpFolder = app.config['TMP_FOLDER']
     _levelIconFolder = app.config['LEVEL_ICON_FOLDER']
     _heroIconFolder = app.config['HERO_ICON_FOLDER']
-    _uploadFolder = app.config['UPLOAD_FOLDER']
     _enableCache = app.config['ENABLE_CACHE']
     _cacheFile = app.config['CACHE_FILE']
 
@@ -127,9 +126,7 @@ def detectAndCalculate(largeImgName, resultImgName):
             playerS.store(hero)
         except KeyError:
             opponentS.store(hero)
-
-
-    cv2.imwrite(_uploadFolder + resultImgName, large_image)
+    cv2.imwrite(resultImgName, large_image)
 
     oAccountant = Accountant(oHeroFactory, playerLevel, playerS, opponentS)
 

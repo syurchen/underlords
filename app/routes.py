@@ -3,7 +3,7 @@ from flask import Flask, render_template, flash, request, redirect, url_for, sen
 from werkzeug.utils import secure_filename 
 
 from app import app
-from Classes.main import detectAndCalculate
+from Classes.Methods import detectAndCalculate
 from Classes.Utils import Utils
 
 def allowed_file(filename):
