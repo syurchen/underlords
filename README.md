@@ -1,4 +1,4 @@
-# underlords
+# Dota Underlords Helper
 Email me(leprosy93 at gmail.com) if you are interesting in coding or helping me with probability theory!
 
 Known limitations/bugs:
@@ -13,3 +13,4 @@ Known limitations/bugs:
 Plans:
 1) Fixing bugged heroes
 2) Adding queue system
+3) Using https://github.com/odota/underlordsconstants for hero data
