@@ -1,11 +1,22 @@
 <html>
-	<head>
-		<title>Underlords Helper - Upload</title>
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-	</head>
+    <head>
+	<title>Underlords Helper - Upload</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+	<script src="{{ url_for('static', filename='js/jquery-3.4.1.min.js') }}"></script>
+	<script type="javascript">
+	    $( document ).ready(function(){
+		$(".submit-spinner").hide();
+		$(".upload-score").on('submit'){
+		    $(".submit-spinner").show();
+	    });
+	</script>
+    </head>
+    <body>
 	<h1>Upload screenshot of your dashboard</h1>
-    <form method=post enctype=multipart/form-data>
-      <input type=file name=file>
-      <input type=submit value=Upload>
-    </form>
+	<form method=post enctype=multipart/form-data class="upload-score">
+	  <input type=file name=file>
+	  <input type=submit value=Upload>
+	</form>
+	<img class="submit-spinner" src="{{ url_for('static', filename='img/ember-thinking.gif') }}">
+    </body>
 </html>
