@@ -45,7 +45,7 @@ def show_result(filename):
         return render_template('queue.html', old_file = oldFilename,
                                queue_place = queuePlace)
 
-    return render_template('processed.html', old_file = 'underlords/uploads/' + oldFilename, new_file = 'underlords/uploads/' + processedFilename, roll_data = rollData)
+    return render_template('processed.html', old_file = oldFilename, new_file = processedFilename, roll_data = rollData)
 
 @app.route('/underlords/uploads/<filename>')
 def uploaded_file(filename):
