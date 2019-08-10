@@ -10,7 +10,8 @@ from Classes.Utils import Utils
 from Classes.Accountant import Accountant
 from Classes.HeroPack import *
 
-from app import app
+from app import app, db
+from app.models import Scoreboard
 
 def detectAndCalculate(largeImgName, resultImgName):
     _tmpFolder = app.config['TMP_FOLDER']
@@ -152,3 +153,16 @@ def detectAndCalculate(largeImgName, resultImgName):
     playerS.doWithEveryStoredHero(getChances)
     
     return chancesList, resultImgName
+
+def storeResults(oldImg, newImg, chancesList):
+    print(chancesList)
+    s = Scoreboard(old_file = oldImg, new_file = newImg, parsed_result =
+                   chancesList)
+    db.session.add(s)
+    db.session.commit()
+
+def getResultsByNewImg(newImg):
+    s = Scoreboard.query.filter(Scoreboard.new_file.like('%' + newImg)).first()
+    if s is not None:
+        return s.old_file, s.new_file, s.parsed_result
+    return False, False, False

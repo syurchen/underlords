@@ -10,7 +10,7 @@ class Config(object):
     HERO_ICON_FOLDER = 'img/hero-icons/'
     LEVEL_ICON_FOLDER = 'img/scoreboard-icons/levels/'
 
-    ENABLE_CACHE = False
+    ENABLE_CACHE = True
     CACHE_FILE = TMP_FOLDER + 'cache'
 
     JSON_HEROES_FILE = STATIC_FOLDER + 'js/units.json'
@@ -22,6 +22,5 @@ class Config(object):
 
     SQLALCHEMY_DATABASE_URI = 'mysql://%s:%s@%s/%s' % (MYSQL_USER, MYSQL_PASSWORD, MYSQL_HOST, MYSQL_DB)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-
 
     SECRET_KEY = 'fill it'
