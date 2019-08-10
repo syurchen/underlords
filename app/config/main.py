@@ -13,3 +13,4 @@ class Config(object):
     ENABLE_CACHE = False
     CACHE_FILE = TMP_FOLDER + 'cache'
 
+    JSON_HEROES_FILE = STATIC_FOLDER + 'js/units.json'
