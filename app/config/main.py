@@ -21,5 +21,7 @@ class Config(object):
     MYSQL_DB = 'underlords'
 
     SQLALCHEMY_DATABASE_URI = 'mysql://%s:%s@%s/%s' % (MYSQL_USER, MYSQL_PASSWORD, MYSQL_HOST, MYSQL_DB)
-        
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+
+    SECRET_KEY = 'fill it'
