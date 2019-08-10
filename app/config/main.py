@@ -14,3 +14,12 @@ class Config(object):
     CACHE_FILE = TMP_FOLDER + 'cache'
 
     JSON_HEROES_FILE = STATIC_FOLDER + 'js/units.json'
+
+    MYSQL_HOST = 'localhost'
+    MYSQL_USER = 'root'
+    MYSQL_PASSWORD = ''
+    MYSQL_DB = 'underlords'
+
+    SQLALCHEMY_DATABASE_URI = 'mysql://%s:%s@%s/%s' % (MYSQL_USER, MYSQL_PASSWORD, MYSQL_HOST, MYSQL_DB)
+        
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
