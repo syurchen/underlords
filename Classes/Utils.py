@@ -16,6 +16,7 @@ class Utils:
             for name in files:
                 if fnmatch.fnmatch(name, pattern):
                     return os.path.join(root, name)
+        print(pattern, result)
         return result
 
     def addBackground(self, imgName, colorHex):
@@ -168,3 +169,22 @@ class Utils:
         
         return str(m.hexdigest()) + '.' + ext
 
+    def prepareHeroName(oldName):
+        pronouns = ['of', 'the']
+        exceptions = {'antimage': 'Anti-Mage',
+                      'bat_rider': 'Batrider',
+                      'furion': 'Nature\'s Prophet',
+                      'wind_ranger': 'Windranger'}
+
+        try:
+            return exceptions[oldName]
+        except KeyError:
+            pass
+
+        oldName = oldName.split('_')
+        result = ''
+        for part in oldName:
+            if part not in pronouns:
+                part = part.capitalize() 
+            result += part + ' '
+        return result[:-1]

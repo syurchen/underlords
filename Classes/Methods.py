@@ -19,11 +19,12 @@ def detectAndCalculate(largeImgName, resultImgName):
     _heroIconFolder = app.config['HERO_ICON_FOLDER']
     _enableCache = app.config['ENABLE_CACHE']
     _cacheFile = app.config['CACHE_FILE']
+    _jsonHeroesFile = app.config['JSON_HEROES_FILE']
 
     _starColorsRgb = app.config['STAR_COLORS_RGB']
     
     oUtils = Utils(_tmpFolder, _levelIconFolder)
-    oHeroFactory = HeroFactory(_heroIconFolder)
+    oHeroFactory = HeroFactory(_heroIconFolder, _jsonHeroesFile)
 
     playerS = HeroStorage()
     opponentS = HeroStorage()
