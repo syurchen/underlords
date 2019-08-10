@@ -1,9 +1,10 @@
 import os
-from flask import Flask, render_template, flash, request, redirect, url_for, send_from_directory
+from flask import Flask, render_template, flash, request, redirect, url_for,\
+    abort, send_from_directory
 from werkzeug.utils import secure_filename 
 
 from app import app
-from Classes.Methods import detectAndCalculate
+from Classes.Methods import detectAndCalculate, storeResults, getResultsByNewImg
 from Classes.Utils import Utils
 
 def allowed_file(filename):
@@ -11,6 +12,7 @@ def allowed_file(filename):
        filename.rsplit('.', 1)[1].lower() in ['png', 'jpg', 'jpeg', 'bmp']
 
 @app.route('/underlords', methods=['GET', 'POST'])
+@app.route('/underlords/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
         # check if the post request has the file part
@@ -28,8 +30,23 @@ def index():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], oldFilename))
             processedFilename = Utils.createNewRandomFilename(oldFilename)
             rollData = detectAndCalculate(app.config['UPLOAD_FOLDER'] + oldFilename, processedFilename)
-            return render_template('processed.html', old_file = 'underlords/uploads/' + oldFilename, new_file = 'underlords/uploads/' + processedFilename, roll_data = rollData)
+            storeResults('underlords/uploads/' + oldFilename, 'underlords/uploads/' + processedFilename, rollData)
+            return redirect(url_for('show_result', filename = processedFilename))
+
     return render_template('upload.html')
+@app.route('/underlords/result/<filename>')
+def show_result(filename):
+    oldFilename, processedFilename, rollData = getResultsByNewImg(filename)
+    if not oldFilename:
+        abort(404)
+    if not rollData:
+        # the image isn't processed. Getting place in queue
+        queuePlace = 10
+        return render_template('queue.html', old_file = oldFilename,
+                               queue_place = queuePlace)
+
+    return render_template('processed.html', old_file = 'underlords/uploads/' + oldFilename, new_file = 'underlords/uploads/' + processedFilename, roll_data = rollData)
+
 @app.route('/underlords/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(os.path.abspath(app.config['UPLOAD_FOLDER']), filename)

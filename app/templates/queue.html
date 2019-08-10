@@ -1,0 +1,13 @@
+<html>
+    <head>
+	<title>Underlords Helper - Queue</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+	<script src="{{ url_for('static', filename='js/jquery-3.4.1.min.js') }}"></script>
+    </head>
+    <body>
+        <h1>Your screenshot '{{ old_file }}' is queued to be processed. <br>
+            There are <b>{{ queue_place }}</b> entries before it's your turn!
+        </h1>
+	<img class="submit-spinner" src="{{ url_for('static', filename='img/ember-thinking.gif') }}">
+    </body>
+</html>
