@@ -12,6 +12,7 @@ Known limitations/bugs:
 - Not detecting player gold
 
 Plans:
-1) Fixing bugged heroes
-2) Adding queue system
-3) Using https://github.com/odota/underlordsconstants for hero data
+- [ ] Storing results in DB, so they can be accesed later
+- [ ] Adding queue system
+- [ ] Fixing bugged heroes
+- [x] Using https://github.com/odota/underlordsconstants for hero data
