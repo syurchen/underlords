@@ -44,7 +44,6 @@ def show_result(filename):
         queuePlace = checkQueue(processedFilename)
         return render_template('queue.html', old_file = oldFilename,
                                new_file = processedFilename, queue_place = queuePlace)
-
     return render_template('processed.html', old_file = 'underlords/uploads/' + oldFilename, 
                            new_file = 'underlords/uploads/' + processedFilename, roll_data = rollData)
 
