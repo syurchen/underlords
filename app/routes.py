@@ -1,10 +1,10 @@
 import os
 from flask import Flask, render_template, flash, request, redirect, url_for,\
-    abort, send_from_directory
+    abort, send_from_directory, jsonify
 from werkzeug.utils import secure_filename 
 
 from app import app
-from Classes.Methods import detectAndCalculate, storeResults, getResultsByNewImg
+from Classes.Methods import queueImg, checkQueue, storeResults, getResultsByNewImg
 from Classes.Utils import Utils
 
 def allowed_file(filename):
@@ -29,11 +29,12 @@ def index():
             oldFilename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], oldFilename))
             processedFilename = Utils.createNewRandomFilename(oldFilename)
-            rollData = detectAndCalculate(app.config['UPLOAD_FOLDER'] + oldFilename, processedFilename)
-            storeResults('underlords/uploads/' + oldFilename, 'underlords/uploads/' + processedFilename, rollData)
+            queueImg(oldFilename, processedFilename)
+            #rollData = detectAndCalculate(app.config['UPLOAD_FOLDER'] + oldFilename, processedFilename)
             return redirect(url_for('show_result', filename = processedFilename))
 
     return render_template('upload.html')
+
 @app.route('/underlords/result/<filename>')
 def show_result(filename):
     oldFilename, processedFilename, rollData = getResultsByNewImg(filename)
@@ -41,11 +42,17 @@ def show_result(filename):
         abort(404)
     if not rollData:
         # the image isn't processed. Getting place in queue
-        queuePlace = 10
+        queuePlace = checkQueue(processedFilename)
         return render_template('queue.html', old_file = oldFilename,
-                               queue_place = queuePlace)
+                               new_file = processedFilename, queue_place = queuePlace)
 
-    return render_template('processed.html', old_file = 'underlords/uploads/' + oldFilename, new_file = 'underlords/uploads/' + processedFilename, roll_data = rollData)
+    return render_template('processed.html', old_file = 'underlords/uploads/' + oldFilename, 
+                           new_file = 'underlords/uploads/' + processedFilename, roll_data = rollData)
+
+@app.route('/underlords/check-queue/<filename>', methods=['POST'])
+def check_queue(filename):
+    return jsonify({'queue': checkQueue(filename)})
+
 
 @app.route('/underlords/uploads/<filename>')
 def uploaded_file(filename):

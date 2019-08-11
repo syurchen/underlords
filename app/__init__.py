@@ -5,6 +5,7 @@ from app.config.main import Config
 
 app = Flask(__name__)
 app.config.from_object(Config())
+app.static_folder = app.config['STATIC_FOLDER']
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)

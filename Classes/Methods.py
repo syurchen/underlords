@@ -30,7 +30,7 @@ def detectAndCalculate(largeImgName, resultImgName):
     playerS = HeroStorage()
     opponentS = HeroStorage()
 
-    largeImgNameCropped = oUtils.cropBig(largeImgName)
+    largeImgNameCropped = oUtils.cropBig(_uploadFolder + largeImgName)
     large_image = cv2.imread(largeImgNameCropped)
 
     playerCrop, playerRow = oUtils.getPlayerCrop(largeImgName)
@@ -152,7 +152,16 @@ def detectAndCalculate(largeImgName, resultImgName):
             #print('%s %s*(need %s more): %s' % (heroName, star, upgradeCount, chances))
     playerS.doWithEveryStoredHero(getChances)
     
-    return chancesList, resultImgName
+    return chancesList
+
+def queueImg(oldImg, newImg):
+    storeResults(oldImg, newImg, None)
+
+def checkQueue(newImg):
+    s = Scoreboard.query.filter(Scoreboard.new_file.like('%' + newImg)).first()
+    return Scoreboard.query.filter(Scoreboard.parsed_result == None,
+                                   Scoreboard.id < s.id).count()
+    
 
 def storeResults(oldImg, newImg, chancesList):
     print(chancesList)

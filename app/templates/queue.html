@@ -1,12 +1,27 @@
 <html>
     <head>
-	<title>Underlords Helper - Queue</title>
-	<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-	<script src="{{ url_for('static', filename='js/jquery-3.4.1.min.js') }}"></script>
+        <title>Underlords Helper - Queue</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="{{ url_for('static', filename='js/jquery-3.4.1.min.js') }}"></script>
+        <script>
+            function updateQueue(){
+                $.post('/underlords/check-queue/{{ new_file }}', function(r){
+                    if ($(".queue-place").text() <= 0)
+                        location.reload();
+                    $(".queue-place").text(r.queue);
+                    console.log("updated queue place");
+                    $(".queue-place").fadeOut(200).fadeIn(200).fadeOut(200).fadeIn(200);
+                });
+            }
+            $(document).ready(function(){
+                setInterval(updateQueue, 2000);
+            });
+        </script>
     </head>
     <body>
         <h1>Your screenshot '{{ old_file }}' is queued to be processed. <br>
-            There are <b>{{ queue_place }}</b> entries before it's your turn!
+            There are <b class="queue-place">{{ queue_place }}</b> entries before it's your turn!
         </h1>
 	<img class="submit-spinner" src="{{ url_for('static', filename='img/ember-thinking.gif') }}">
     </body>
