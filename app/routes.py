@@ -30,7 +30,6 @@ def index():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], oldFilename))
             processedFilename = Utils.createNewRandomFilename(oldFilename)
             queueImg(oldFilename, processedFilename)
-            #rollData = detectAndCalculate(app.config['UPLOAD_FOLDER'] + oldFilename, processedFilename)
             return redirect(url_for('show_result', filename = processedFilename))
 
     return render_template('upload.html')

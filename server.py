@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from app import app, routes, models
+from app import app, routes
 from flask import Flask
 
 if __name__ == "__main__":
