@@ -33,7 +33,7 @@ def detectAndCalculate(largeImgName, resultImgName):
     largeImgNameCropped = oUtils.cropBig(_uploadFolder + largeImgName)
     large_image = cv2.imread(largeImgNameCropped)
 
-    playerCrop, playerRow = oUtils.getPlayerCrop(largeImgName)
+    playerCrop, playerRow = oUtils.getPlayerCrop(_uploadFolder + largeImgName)
     playerLevel = oUtils.getPlayerLevel(playerCrop)
     #print('Player row: %s \nPlayer level %s\n' % (playerRow, playerLevel)) 
 

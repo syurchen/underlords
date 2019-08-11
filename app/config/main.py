@@ -10,7 +10,7 @@ class Config(object):
     HERO_ICON_FOLDER = 'img/hero-icons/'
     LEVEL_ICON_FOLDER = 'img/scoreboard-icons/levels/'
 
-    ENABLE_CACHE = True
+    ENABLE_CACHE = False
     CACHE_FILE = TMP_FOLDER + 'cache'
 
     JSON_HEROES_FILE = STATIC_FOLDER + 'js/units.json'
