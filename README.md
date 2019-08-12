@@ -12,7 +12,7 @@ Known limitations/bugs:
 - Not detecting player gold
 
 Plans:
-- [X] Storing results in DB, so they can be accesed later
-- [ ] Adding queue system
+- [x] Storing results in DB, so they can be accesed later
+- [x] Adding queue system (added a bad db-based one)
 - [ ] Fixing bugged heroes
 - [x] Using https://github.com/odota/underlordsconstants for hero data
