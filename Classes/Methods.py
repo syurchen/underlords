@@ -14,6 +14,7 @@ from app import app, db
 from app.models import Scoreboard
 
 def detectAndCalculate(largeImgName, resultImgName):
+    _debug = app.config['UND_DEBUG']
     _tmpFolder = app.config['TMP_FOLDER']
     _uploadFolder = app.config['UPLOAD_FOLDER']
     _levelIconFolder = app.config['LEVEL_ICON_FOLDER']
@@ -101,7 +102,6 @@ def detectAndCalculate(largeImgName, resultImgName):
         if pt[0] < heroLineX or (pt[0] > heroLineBenchX and pt[0] < heroLineBenchEndX):
             heroLines.append(val)
             del foundList[i]
-    
     #If lines are close, they are in conflict !TODO solve conflict
     heroLines.sort(key=lambda k: k['point'][1])
     prev = 0
@@ -129,10 +129,19 @@ def detectAndCalculate(largeImgName, resultImgName):
         hero = oHeroFactory.getHeroByName(val['name'], val['star'])
         try:
             val['player']
+            print('player storing:')
+            print(hero.getName(), hero.getStar())
             playerS.store(hero)
         except KeyError:
             opponentS.store(hero)
     cv2.imwrite(_uploadFolder + resultImgName, large_image)
+
+    if _debug:
+        print('heroLines:')
+        print(heroLines)
+        print(conflicts)
+        print('player storage:')
+        print(playerS._storage)
 
     oAccountant = Accountant(oHeroFactory, playerLevel, playerS, opponentS)
 
@@ -169,7 +178,6 @@ def checkQueue(newImg):
     
 
 def storeResults(oldImg, newImg, chancesList):
-    print(chancesList)
     s = Scoreboard(old_file = oldImg, new_file = newImg, parsed_result =
                    chancesList)
     db.session.add(s)

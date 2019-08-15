@@ -1,4 +1,6 @@
 class Config(object):
+    UND_DEBUG = False
+
     BACKGROUND_COLORS = ('#25222d', '#312c40')
     STAR_COLORS = ('#bbb2a9', '#b4c4e6', '#f3ef00')
     STAR_COLORS_RGB = ((167, 168, 162), (180, 196, 230), (243, 250, 45))
