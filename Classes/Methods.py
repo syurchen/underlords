@@ -60,7 +60,7 @@ def detectAndCalculate(largeImgName, resultImgName):
                 #print("row: %s" % (pt,))
                 try:
                     star = oUtils.getStarsByColor(largeImgNameCropped, (pt[0], pt[1], w, h), _starColorsRgb)
-                    #print(str(star) + ' stars\n')
+                    print(oHero.getName(), str(star) + ' stars\n', pt)
                     foundList.append({'name': oHero.getName(), 'point': pt, 'star': star})
                 except IndexError:
                     pass
@@ -92,6 +92,7 @@ def detectAndCalculate(largeImgName, resultImgName):
     heroLineBenchX = largeW * .75
     heroLineBenchEndX = heroLineBenchX + 32 
     #print(heroLineBenchX, heroLineBenchEndX)
+
     #finding start of hero lines
     heroLines = []
     for i, val in enumerate(foundList):
@@ -118,7 +119,8 @@ def detectAndCalculate(largeImgName, resultImgName):
         pt = val['point']
         for lineStart in heroLines:
             startPt = lineStart['point']
-            if pt[0] > startPt[0] and abs(startPt[1] - pt[1]) < 5:
+            if pt[0] > startPt[0] and abs(startPt[1] - pt[1]) < 5 or \
+                    (pt[0] > heroLineBenchX and startPt[1] - pt[1] > 25):
                 heroLines.append(val)
                 break
    
@@ -134,7 +136,6 @@ def detectAndCalculate(largeImgName, resultImgName):
             opponentS.store(hero)
     cv2.imwrite(_uploadFolder + resultImgName, large_image)
     oAccountant = Accountant(oHeroFactory, playerLevel, playerS, opponentS)
-
     chancesList = []
     def getChances(hero):
         playerCount = hero['count']

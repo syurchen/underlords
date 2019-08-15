@@ -58,7 +58,7 @@ class Utils:
         w, h = img.size
         left = w / 4
         top = h / 16
-        right = 14.5 * w / 16
+        right = 13.8 * w / 16
         bottom =  14.2 * h / 16
         cropped = img.crop((left, top, right, bottom))
         Utils.changeContrast(cropped, 254)
