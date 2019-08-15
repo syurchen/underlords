@@ -87,7 +87,6 @@ class HeroFactory:
     def doWithEveryHero(self, func):
         for heroDict in self._heroList:
             func(Hero(heroDict['name'], heroDict['cost'], self._heroIconFolder, 1, heroDict['hard']))
-                #self.count += 1
 
 class HeroStorage:
     
@@ -97,16 +96,20 @@ class HeroStorage:
     # All heroes are stored in tokens (1*)
     def store(self, hero, count = 0):
         heroName = hero.getName()
+        pr = False
+        if heroName == 'Bloodseeker':
+            pr = True
         heroDict = {}
         heroDict['hero'], heroDict['count'] = hero.tokenize()
+        if heroName in self._storage:
+            self._storage[heroName]['count'] += heroDict['count']
+            return
+
         self._storage[heroName] = {'name': heroName, 'count': 0}
         if count != 0:
             self._storage[heroName]['count'] = count
 
-        if heroName in self._storage:
-            self._storage[heroName]['count'] += heroDict['count']
-        else:
-            self._storage[heroName] = heroDict
+        self._storage[heroName] = heroDict
 
     def getHeroCount(self, heroName):
         try:
