@@ -88,7 +88,7 @@ def detectAndCalculate(largeImgName, resultImgName):
     heroLineBenchX = largeW * .75
     heroLineBenchEndX = heroLineBenchX + 32 
     #print(heroLineBenchX, heroLineBenchEndX)
-    
+    print(foundList) 
     #finding start of hero lines
     heroLines = []
     for i, val in enumerate(foundList):
