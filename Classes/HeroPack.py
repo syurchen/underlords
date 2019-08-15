@@ -96,6 +96,9 @@ class HeroStorage:
     # All heroes are stored in tokens (1*)
     def store(self, hero, count = 0):
         heroName = hero.getName()
+        pr = False
+        if heroName == 'Bloodseeker':
+            pr = True
         heroDict = {}
         heroDict['hero'], heroDict['count'] = hero.tokenize()
         if heroName in self._storage:
