@@ -35,6 +35,10 @@ def detectAndCalculate(largeImgName, resultImgName):
 
     playerCrop, playerRow = oUtils.getPlayerCrop(_uploadFolder + largeImgName)
     playerLevel = oUtils.getPlayerLevel(playerCrop)
+    #Failed to detect player level. We can't work with this image
+    if playerLevel not in range(1, 10):
+        return []
+
     #print('Player row: %s \nPlayer level %s\n' % (playerRow, playerLevel)) 
 
     def findHeroOnImg(large_image, oHero):
@@ -88,7 +92,6 @@ def detectAndCalculate(largeImgName, resultImgName):
     heroLineBenchX = largeW * .75
     heroLineBenchEndX = heroLineBenchX + 32 
     #print(heroLineBenchX, heroLineBenchEndX)
-    print(foundList) 
     #finding start of hero lines
     heroLines = []
     for i, val in enumerate(foundList):
@@ -159,6 +162,8 @@ def queueImg(oldImg, newImg):
 
 def checkQueue(newImg):
     s = Scoreboard.query.filter(Scoreboard.new_file.like('%' + newImg)).first()
+    if s.parsed_result !=  None:
+        return True
     return Scoreboard.query.filter(Scoreboard.parsed_result == None,
                                    Scoreboard.id < s.id).count()
     

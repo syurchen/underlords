@@ -39,7 +39,7 @@ def show_result(filename):
     oldFilename, processedFilename, rollData = getResultsByNewImg(filename)
     if not oldFilename:
         abort(404)
-    if not rollData:
+    if rollData is None:
         # the image isn't processed. Getting place in queue
         queuePlace = checkQueue(processedFilename)
         return render_template('queue.html', old_file = oldFilename,

@@ -86,8 +86,7 @@ class HeroFactory:
 
     def doWithEveryHero(self, func):
         for heroDict in self._heroList:
-            if heroDict['name'] == 'Mirana':
-                func(Hero(heroDict['name'], heroDict['cost'], self._heroIconFolder, 1, heroDict['hard']))
+            func(Hero(heroDict['name'], heroDict['cost'], self._heroIconFolder, 1, heroDict['hard']))
                 #self.count += 1
 
 class HeroStorage:

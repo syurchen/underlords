@@ -122,7 +122,7 @@ class Utils:
                 threshold = .8
                 loc = np.where(res >= threshold)
                 if loc[0].size > 0:
-                    return re.findall('\d+', filename)[0]
+                    return int(re.findall('\d+', filename)[0])
 
     def changeContrast(img, level):
         factor = (259 * (level + 255)) / (255 * (259 - level))

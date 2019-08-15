@@ -8,6 +8,13 @@
     <script>
         $(document).ready(function(){
             var result = {{ roll_data|tojson }};
+	    if (result.length == 0){
+		$(".result-table").hide();
+		$(".debug-img").hide();
+		$('body').append('<h3>We were not able to find scoreboard on your image. If you are sure it is there, contact developer. leprosy93 at gmail.com</h3>');
+
+		return;
+	    }
             for (i = 0; i < result.length; i++){
                 data = result[i];
                 $(".result-table").append('<tr>' +
@@ -30,5 +37,5 @@
 		</thead>
 	</table>
 	<a href="/{{ old_file }}">Uploaded image</a>
-	<a href="/{{ new_file }}">Debug image</a>
+	<a class="debug-img" href="/{{ new_file }}">Debug image</a>
 </html>

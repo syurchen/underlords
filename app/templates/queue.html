@@ -7,10 +7,11 @@
         <script>
             function updateQueue(){
                 $.post('/underlords/check-queue/{{ new_file }}', function(r){
-                    if ($(".queue-place").text() <= 0)
+                    if (r.queue == 0)
+			$(".verbose").text("Your screenshot '{{ old_file }}' is being processed right now!");
+                    if (r.queue === true)
                         location.reload();
                     $(".queue-place").text(r.queue);
-                    console.log("updated queue place");
                     $(".queue-place").fadeOut(200).fadeIn(200).fadeOut(200).fadeIn(200);
                 });
             }
@@ -20,7 +21,7 @@
         </script>
     </head>
     <body>
-        <h1>Your screenshot '{{ old_file }}' is queued to be processed. <br>
+        <h1 class="verbose">Your screenshot '{{ old_file }}' is queued to be processed. <br>
             There are <b class="queue-place">{{ queue_place }}</b> entries before it's your turn!
         </h1>
 	<img class="submit-spinner" src="{{ url_for('static', filename='img/ember-thinking.gif') }}">
