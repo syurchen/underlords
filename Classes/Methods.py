@@ -133,7 +133,6 @@ def detectAndCalculate(largeImgName, resultImgName):
         except KeyError:
             opponentS.store(hero)
     cv2.imwrite(_uploadFolder + resultImgName, large_image)
-
     oAccountant = Accountant(oHeroFactory, playerLevel, playerS, opponentS)
 
     chancesList = []

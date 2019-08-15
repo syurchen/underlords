@@ -100,9 +100,12 @@ class Accountant:
 
         heroCost = hero.getCost()
         playerCount = self._playerS.getHeroCount(heroName)
-        poolCount = self.getPoolCountByCost(heroCost) #Number of heroes on same cost in pool
         heroPoolCount = self._sharedPool.getHeroCount(heroName) #Number of desired heroes in pool
         costOdds = Accountant.getOdds(self._playerLevel)[heroCost - 1]
+
+        poolCount = self.getPoolCountByCost(heroCost) #Number of heroes on same cost in pool
+        poolCount -= 5 * costOdds #Exctracting shop blacklist
+
         if playerCount < 3:
             upgradeCount = 3 - playerCount
         else:
@@ -112,12 +115,13 @@ class Accountant:
 
         mainChance = 1
         for i in range (0, upgradeCount - 1):
-            mainChance = mainChance * (heroPoolCount - i) / (poolCount - i) 
+            mainChance *= (heroPoolCount - i) / (poolCount - i) 
         mainChance = mainChance * costOdds
 
+
         for i in chances.keys():
-            rollCount = i * 5 #because we are displayer 5 heroes per roll
-            chance = round(mainChance * (rollCount - upgradeCount) * 10**6, 3)
+            rollCount = i * 5 #because we are displaying 5 heroes per roll
+            chance = round(mainChance * (rollCount - upgradeCount) * 100, 3)
             if chance > 100:
                 chances[i] = 99.999
             else:
