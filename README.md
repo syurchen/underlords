@@ -15,5 +15,6 @@ Plans:
 - [x] Storing results in DB, so they can be accesed later
 - [x] Adding queue system (added a bad db-based one)
 - [X] Not relevant pictures are not parsed at all and freeze worker
+- [ ] Implement blackist correctly
 - [ ] Fixing bugged heroes
 - [x] Using https://github.com/odota/underlordsconstants for hero data
