@@ -13,7 +13,7 @@ from Classes.HeroPack import *
 from app import app, db
 from app.models import Scoreboard
 
-def detectAndCalculate(largeImgName, resultImgName):
+def detect(largeImgName, resultImgName):
     _tmpFolder = app.config['TMP_FOLDER']
     _uploadFolder = app.config['UPLOAD_FOLDER']
     _levelIconFolder = app.config['LEVEL_ICON_FOLDER']
@@ -135,6 +135,16 @@ def detectAndCalculate(largeImgName, resultImgName):
         except KeyError:
             opponentS.store(hero)
     cv2.imwrite(_uploadFolder + resultImgName, large_image)
+    return playerLevel, playerS, opponentS
+
+def calculateFixedRollChance(playerLevel, playerSDict, opponentSDict):
+    _heroIconFolder = app.config['HERO_ICON_FOLDER']
+    _jsonHeroesFile = app.config['JSON_HEROES_FILE']
+    oHeroFactory = HeroFactory(_heroIconFolder, _jsonHeroesFile)
+
+    playerS = HeroStorage(playerSDict)
+    opponentS = HeroStorage(opponentSDict)
+
     oAccountant = Accountant(oHeroFactory, playerLevel, playerS, opponentS)
     chancesList = []
     def getChances(hero):
@@ -157,26 +167,55 @@ def detectAndCalculate(largeImgName, resultImgName):
     
     return chancesList
 
-def queueImg(oldImg, newImg):
-    storeResults(oldImg, newImg, None)
+def queueImgForParsing(oldImg, newImg):
+    storeParsedData(oldImg, newImg)
 
 def checkQueue(newImg):
     s = Scoreboard.query.filter(Scoreboard.new_file.like('%' + newImg)).first()
-    if s.parsed_result !=  None:
+    if s.parsed_player_level != None:
         return True
-    return Scoreboard.query.filter(Scoreboard.parsed_result == None,
+    return Scoreboard.query.filter(Scoreboard.parsed_player_level == None,
                                    Scoreboard.id < s.id).count()
     
-
-def storeResults(oldImg, newImg, chancesList):
-    print(chancesList)
-    s = Scoreboard(old_file = oldImg, new_file = newImg, parsed_result =
-                   chancesList)
-    db.session.add(s)
+def storeParsedData(oldImg, newImg, playerLevel = None, playerS = None,
+                    opponentS = None):
+    s = Scoreboard.query.filter(Scoreboard.new_file.like('%' + newImg)).first()
+    if s is None:
+        s = Scoreboard(old_file = oldImg, new_file = newImg, 
+                       parsed_player_level = playerLevel,
+                       parsed_player_storage = playerS,
+                       parsed_opponent_storage = opponentS)
+        db.session.add(s)
+    else:
+        s.parsed_player_level = playerLevel
+        s.parsed_player_storage = playerS
+        s.parsed_opponent_storage = opponentS
     db.session.commit()
 
-def getResultsByNewImg(newImg):
+def storeFixedRollResults(oldImg, newImg, chancesList = None):
     s = Scoreboard.query.filter(Scoreboard.new_file.like('%' + newImg)).first()
+    if s is None:
+        s = Scoreboard(old_file = oldImg, new_file = newImg, parsed_result =
+                       chancesList)
+        db.session.add(s)
+    else:
+        s.parsed_result = chancesList
+    db.session.commit()
+
+def getParsedResultByNewImg(newImg):
+    s = getScoreboardByNewImg(newImg)
     if s is not None:
         return s.old_file, s.new_file, s.parsed_result
     return False, False, False
+
+def getParsedDataByNewImg(newImg):
+    s = getScoreboardByNewImg(newImg)
+    if s is not None:
+        return s.parsed_player_level, s.parsed_player_storage, \
+            s.parsed_opponent_storage
+    return False, False, False
+
+def getScoreboardByNewImg(newImg):
+    mask = '%' + newImg
+    return Scoreboard.query.filter(Scoreboard.new_file.like(mask)).first()
+

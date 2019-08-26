@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 from app import db
 from app.models import Scoreboard
-from Classes.Methods import storeResults, getResultsByNewImg, detectAndCalculate
+from Classes.Methods import storeParsedData, detect
 
 if __name__ == "__main__":
-    s = Scoreboard.query.filter(Scoreboard.parsed_result == None).first()
+    s = Scoreboard.query.filter(Scoreboard.parsed_player_level == None).first()
     if s != None:
-        chancesList = detectAndCalculate(s.old_file, s.new_file)
-        s.parsed_result = chancesList
-        db.session.commit()
+        #should store as array. not as class
+        playerLevel, playerS, opponentS = detect(s.old_file, s.new_file)
+        playerS = playerS.toArray()
+        opponentS = opponentS.toArray()
+        storeParsedData(s.old_file, s.new_file, playerLevel, playerS,
+                        opponentS)

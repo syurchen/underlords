@@ -4,7 +4,7 @@ from flask import Flask, render_template, flash, request, redirect, url_for,\
 from werkzeug.utils import secure_filename 
 
 from app import app
-from Classes.Methods import queueImg, checkQueue, storeResults, getResultsByNewImg
+from Classes.Methods import *
 from Classes.Utils import Utils
 
 def allowed_file(filename):
@@ -29,21 +29,29 @@ def index():
             oldFilename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], oldFilename))
             processedFilename = Utils.createNewRandomFilename(oldFilename)
-            queueImg(oldFilename, processedFilename)
+            queueImgForParsing(oldFilename, processedFilename)
             return redirect(url_for('show_result', filename = processedFilename))
 
     return render_template('upload.html')
 
 @app.route('/underlords/result/<filename>')
 def show_result(filename):
-    oldFilename, processedFilename, rollData = getResultsByNewImg(filename)
+    # Checking if roll chances have alredy been calculated
+    oldFilename, processedFilename, rollData = getParsedResultByNewImg(filename)
+    # Img doesn't exist
     if not oldFilename:
         abort(404)
     if rollData is None:
-        # the image isn't processed. Getting place in queue
-        queuePlace = checkQueue(processedFilename)
-        return render_template('queue.html', old_file = oldFilename,
-                               new_file = processedFilename, queue_place = queuePlace)
+        # Checking if Img has been parsed
+        playerLevel, playerS, opponentS = getParsedDataByNewImg(filename)
+        if playerLevel is None:
+            # the image isn't parsed. Getting place in queue
+            queuePlace = checkQueue(processedFilename)
+            return render_template('queue.html', old_file = oldFilename,
+                                   new_file = processedFilename, queue_place = queuePlace)
+        rollData = calculateFixedRollChance(playerLevel, playerS, opponentS)
+        storeFixedRollResults(oldFilename, processedFilename, rollData)
+
     return render_template('processed.html', old_file = 'underlords/uploads/' + oldFilename, 
                            new_file = 'underlords/uploads/' + processedFilename, roll_data = rollData)
 

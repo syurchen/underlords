@@ -91,8 +91,8 @@ class HeroFactory:
 
 class HeroStorage:
     
-    def __init__(self):
-        self._storage = {}
+    def __init__(self, storage = {}):
+        self._storage = storage
 
     # All heroes are stored in tokens (1*)
     def store(self, hero, count = 0):
@@ -113,4 +113,7 @@ class HeroStorage:
     def doWithEveryStoredHero(self, func):
         for hero in self._storage.values():
             func(hero)
+
+    def toArray(self):
+        return self._storage
 
