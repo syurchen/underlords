@@ -37,7 +37,7 @@ def detect(largeImgName, resultImgName):
     playerLevel = oUtils.getPlayerLevel(playerCrop)
     #Failed to detect player level. We can't work with this image
     if playerLevel not in range(1, 10):
-        return []
+        return 0, [], []
 
     #print('Player row: %s \nPlayer level %s\n' % (playerRow, playerLevel)) 
 
