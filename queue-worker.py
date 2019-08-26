@@ -8,7 +8,8 @@ if __name__ == "__main__":
     if s != None:
         #should store as array. not as class
         playerLevel, playerS, opponentS = detect(s.old_file, s.new_file)
-        playerS = playerS.toArray()
-        opponentS = opponentS.toArray()
+        if playerLevel > 0:
+            playerS = playerS.toArray()
+            opponentS = opponentS.toArray()
         storeParsedData(s.old_file, s.new_file, playerLevel, playerS,
                         opponentS)
