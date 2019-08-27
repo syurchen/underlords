@@ -161,13 +161,14 @@ class Utils:
                 return False
         return True
 
-    def createNewRandomFilename(oldName, wc = 5):
-        ext = os.path.splitext(oldName)[1][1:]
+    def createNewAndOldRandomFilename(oldName):
+        ext = os.path.splitext(oldName)[1]
+        noExt = os.path.splitext(oldName)[0]
         m = hashlib.md5()
         m.update(oldName.encode('utf-8'))
         m.update(str(time.time()).encode('utf-8'))
-        
-        return str(m.hexdigest()) + '.' + ext
+        hashed = str(m.hexdigest())
+        return  hashed + ext, noExt + '-' + hashed + ext
 
     def prepareHeroName(oldName):
         pronouns = ['of', 'the']

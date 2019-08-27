@@ -27,8 +27,8 @@ def index():
             return redirect(request.url)
         if file and allowed_file(file.filename):
             oldFilename = secure_filename(file.filename)
+            processedFilename, oldFilename = Utils.createNewAndOldRandomFilename(oldFilename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], oldFilename))
-            processedFilename = Utils.createNewRandomFilename(oldFilename)
             queueImgForParsing(oldFilename, processedFilename)
             return redirect(url_for('show_result', filename = processedFilename))
 
