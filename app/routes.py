@@ -34,7 +34,8 @@ def index():
 
     return render_template('upload.html')
 
-@app.route('/underlords/result/<filename>')
+@app.route('/underlords/<filename>/result-fixed')
+@app.route('/underlords/<filename>/result-fixed/')
 def show_result(filename):
     # Checking if roll chances have alredy been calculated
     oldFilename, processedFilename, rollData = getParsedResultByNewImg(filename)
