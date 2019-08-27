@@ -170,6 +170,11 @@ class Utils:
         hashed = str(m.hexdigest())
         return  hashed + ext, noExt + '-' + hashed + ext
 
+    def getRealOldFilename(oldName):
+        splitMinus = oldName.split('-')
+        ext = os.path.splitext(oldName)[1]
+        return ''.join(splitMinus[:-1]) + ext
+
     def prepareHeroName(oldName):
         pronouns = ['of', 'the']
         exceptions = {'antimage': 'Anti-Mage',

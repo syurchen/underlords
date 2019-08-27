@@ -47,7 +47,8 @@ def show_result(filename):
         if playerLevel is None:
             # the image isn't parsed. Getting place in queue
             queuePlace = checkQueue(processedFilename)
-            return render_template('queue.html', old_file = oldFilename,
+            return render_template('queue.html', old_file =
+                                   Utils.getRealOldFilename(oldFilename),
                                    new_file = processedFilename, queue_place = queuePlace)
         rollData = calculateFixedRollChance(playerLevel, playerS, opponentS)
         storeFixedRollResults(oldFilename, processedFilename, rollData)
