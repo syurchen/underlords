@@ -91,8 +91,11 @@ class HeroFactory:
 
 class HeroStorage:
     
-    def __init__(self, storage = {}):
-        self._storage = storage
+    def __init__(self, storage = None):
+        if storage is None:
+            self._storage = {}
+        else:
+            self._storage = storage
 
     # All heroes are stored in tokens (1*)
     def store(self, hero, count = 0):
