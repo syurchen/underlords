@@ -3,18 +3,20 @@
 		<title>Underlords Helper - Results</title>
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
         <script src="{{ url_for('static', filename='js/jquery-3.4.1.min.js') }}"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	</head>
 	<h1>Result of processing your scoreboard</h1>
     <script>
         $(document).ready(function(){
             var result = {{ roll_data|tojson }};
-	    if (result.length == 0){
-		$(".result-table").hide();
-		$(".debug-img").hide();
-		$('body').append('<h3>We were not able to find scoreboard on your image. If you are sure it is there, contact developer. leprosy93 at gmail.com</h3>');
+            if (!result.length){
+                $(".result-table").hide();
+                $(".debug-img").hide();
+                $('body').append('<h3>We were not able to find scoreboard on your image. If you are sure it is there, contact developer. leprosy93 at gmail.com</h3>');
 
-		return;
-	    }
+                return;
+            }
+
             for (i = 0; i < result.length; i++){
                 data = result[i];
                 $(".result-table").append('<tr>' +
