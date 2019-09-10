@@ -30,13 +30,13 @@ def index():
             processedFilename, oldFilename = Utils.createNewAndOldRandomFilename(oldFilename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], oldFilename))
             queueImgForParsing(oldFilename, processedFilename)
-            return redirect(url_for('show_result', filename = processedFilename))
+            return redirect(url_for('show_fixed_result', filename = processedFilename))
 
     return render_template('upload.html')
 
 @app.route('/underlords/<filename>/result-fixed')
 @app.route('/underlords/<filename>/result-fixed/')
-def show_result(filename):
+def show_fixed_result(filename):
     # Checking if roll chances have alredy been calculated
     oldFilename, processedFilename, rollData = getParsedResultByNewImg(filename)
     # Img doesn't exist
@@ -51,8 +51,11 @@ def show_result(filename):
             return render_template('queue.html', old_file =
                                    Utils.getRealOldFilename(oldFilename),
                                    new_file = processedFilename, queue_place = queuePlace)
-        rollData = calculateFixedRollChance(playerLevel, playerS, opponentS)
-        storeFixedRollResults(oldFilename, processedFilename, rollData)
+        if playerLevel == 0:
+            rollData = {}
+        else:
+            rollData = calculateFixedRollChance(playerLevel, playerS, opponentS)
+            storeFixedRollResults(oldFilename, processedFilename, rollData)
 
     return render_template('processed.html', old_file = 'underlords/uploads/' + oldFilename, 
                            new_file = 'underlords/uploads/' + processedFilename, roll_data = rollData)
