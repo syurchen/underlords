@@ -16,5 +16,6 @@ Plans:
 - [x] Adding queue system (added a bad db-based one)
 - [X] Not relevant pictures are not parsed at all and freeze worker
 - [ ] Implement blacklist correctly
-- [ ] Fixing bugged heroes
+- [ ] Fixing bugged heroes - ON HOLD
+- [ ] Trying to remake detecting algorithm
 - [x] Using https://github.com/odota/underlordsconstants for hero data
